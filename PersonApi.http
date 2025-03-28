@@ -1,0 +1,40 @@
+@PersonApi_HostAddress = http://localhost:5001
+
+### Get all persons
+GET {{PersonApi_HostAddress}}/api/Person
+Accept: application/json
+
+### Get person by ID
+GET {{PersonApi_HostAddress}}/api/Person/1
+Accept: application/json
+
+### Create a new person
+POST {{PersonApi_HostAddress}}/api/Person
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "address": "123 Main St",
+  "phone": "555-123-4567",
+  "email": "john.doe@example.com",
+  "dateOfBirth": "1990-01-01"
+}
+
+### Update a person
+PUT {{PersonApi_HostAddress}}/api/Person/1
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "address": "456 New Address",
+  "phone": "555-987-6543",
+  "email": "john.updated@example.com",
+  "dateOfBirth": "1990-01-01"
+}
+
+### Delete a person
+DELETE {{PersonApi_HostAddress}}/api/Person/1
+
+

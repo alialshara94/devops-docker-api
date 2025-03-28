@@ -1,0 +1,42 @@
+using Microsoft.EntityFrameworkCore;
+using PersonApi.Data;
+using PersonApi.Repositories;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddOpenApi();
+builder.Services.AddControllers();
+
+// Configure MySQL database
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<PersonApi.Data.ApplicationDbContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+// Register repositories
+builder.Services.AddScoped<PersonApi.Repositories.IPersonRepository, PersonApi.Repositories.PersonRepository>();
+
+// Add AutoMapper
+builder.Services.AddAutoMapper(typeof(PersonApi.Mappings.MappingProfile));
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
+
+app.UseHttpsRedirection();
+
+// Apply migrations at startup
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<PersonApi.Data.ApplicationDbContext>();
+    dbContext.Database.Migrate();
+}
+
+app.MapControllers();
+
+app.Run();
